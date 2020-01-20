@@ -14,7 +14,8 @@ public class ProductDto {
     String productName;
     String productImageUrl;
     Map<String,String> productAttributes;
+    double productPrice;
     int productRating;
     String productDescription;
-
+    ProductDetailsDto productDetailsDto;
 }
