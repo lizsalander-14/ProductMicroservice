@@ -7,7 +7,7 @@ import java.util.Map;
 
 @Getter
 @Setter
-public class ProductDTO {
+public class ProductDto {
 
     String productId;
     String categoryId;
