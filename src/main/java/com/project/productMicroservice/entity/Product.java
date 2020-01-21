@@ -18,7 +18,7 @@ public class Product {
     String productId;
     String categoryId;
     String productName;
-    String productImageUrl;
+    String imageUrl;
     Map<String,String> productAttributes;
     double productPrice;
     int productRating;

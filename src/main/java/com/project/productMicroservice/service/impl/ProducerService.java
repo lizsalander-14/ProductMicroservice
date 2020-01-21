@@ -20,6 +20,6 @@ public class ProducerService {
 
         this.productDtoKafkaTemplate.send(TopicName,product.toString());
 
-        
+
     }
 }

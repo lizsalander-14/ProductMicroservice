@@ -6,6 +6,8 @@ import com.project.productMicroservice.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ProductServiceImpl implements ProductService {
 
@@ -18,7 +20,19 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product updateProduct(Product product) {
-        return productRepository.save(product);
+    public Product getProductDetailsById(String productId) {
+        return productRepository.findById(productId).get();
     }
+
+    @Override
+    public List<Product> getPopularProducts() {
+        return productRepository.getPopularProducts();
+    }
+
+    @Override
+    public Iterable<Product> getProductsByCategory() {
+        return productRepository.findByCategoryId();
+    }
+
+
 }
