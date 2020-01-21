@@ -46,14 +46,14 @@ public class ProductController {
             //Passing created object to search microservice
             producerService.produce(product);
 
-//            //Passing required details to merchant microservice
-//            final String uri = "http://10.177.69.78:8080/productdetails/update";
-//            HttpHeaders headers = new HttpHeaders();
-//            headers.setContentType(MediaType.APPLICATION_JSON);
-//            HttpEntity<ProductDetailsDto> entityReq = new HttpEntity<>(productDetailsDto, headers);
-//            RestTemplate restTemplate = new RestTemplate();
-//            String result = restTemplate.postForObject(uri,entityReq, String.class,productCreated);
-//            System.out.println(result);
+            //Passing required details to merchant microservice
+            final String uri = "http://10.177.69.78:8080/productdetails/updateProduct";
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<ProductDetailsDto> entityReq = new HttpEntity<>(productDetailsDto, headers);
+            RestTemplate restTemplate = new RestTemplate();
+            String result = restTemplate.postForObject(uri,entityReq, String.class,productCreated);
+            System.out.println(result);
 
             responseDto.setData(productCreated);
             responseDto.setSuccess(true);
@@ -132,7 +132,7 @@ public class ProductController {
         productDetails.setProduct(productService.getProductDetailsById(productId));
         ResponseDto<ProductDetailsPageDto> responseDto=new ResponseDto<>();
         try{
-            final String uri = "http://10.177.69.78:8080/productdetails/update";
+            final String uri = "http://10.177.69.78:8080/productdetails/merchantProductsList";
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             HttpEntity<String> entityReq = new HttpEntity<>(productId, headers);

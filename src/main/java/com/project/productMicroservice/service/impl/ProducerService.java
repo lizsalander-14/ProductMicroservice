@@ -1,5 +1,7 @@
 package com.project.productMicroservice.service.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.project.productMicroservice.dto.ProductDto;
 import com.project.productMicroservice.entity.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -18,7 +20,9 @@ public class ProducerService {
     public void produce(Product product) throws IOException
     {
 
-        this.productDtoKafkaTemplate.send(TopicName,product.toString());
+        ObjectMapper objectMapper = new ObjectMapper();
+        String productDto=objectMapper.writeValueAsString(product);
+        this.productDtoKafkaTemplate.send(TopicName,productDto);
 
 
     }
