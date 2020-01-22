@@ -14,5 +14,5 @@ public interface ProductRepository extends MongoRepository<Product,String> {
     @Query("{$sort:{productRating:-1},$limit:4}")
     List<Product> getPopularProducts();
 
-    Iterable<Product> findByCategoryId();
+    List<Product> findByCategoryId();
 }

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/product")
 public class CategoryController {
 
@@ -20,11 +21,21 @@ public class CategoryController {
     CategoryService categoryService;
 
     @PostMapping("/addCategory")
-    public ResponseEntity<String> addCategory(@RequestBody CategoryDto categoryDto){
-        Category category =new Category();
-        BeanUtils.copyProperties(categoryDto,category);
-        Category categoryCreated=categoryService.add(category);
-        return new ResponseEntity<String>(String.valueOf(categoryCreated.getCategoryId()),HttpStatus.CREATED);
+    public ResponseDto<Category> addCategory(@RequestBody CategoryDto categoryDto){
+        ResponseDto<Category> responseDto=new ResponseDto<>();
+        try {
+            Category category = new Category();
+            BeanUtils.copyProperties(categoryDto, category);
+            Category categoryCreated = categoryService.add(category);
+            responseDto.setSuccess(true);
+            responseDto.setData(categoryCreated);
+        }
+        catch (Exception e){
+            responseDto.setSuccess(false);
+            responseDto.setMessage("Category not created!");
+            e.printStackTrace();
+        }
+        return responseDto;
     }
 
     @GetMapping("/getCategories")
@@ -38,6 +49,7 @@ public class CategoryController {
         catch (Exception e){
             responseDto.setSuccess(false);
             responseDto.setMessage("Categories not found");
+            e.printStackTrace();
         }
         return responseDto;
     }

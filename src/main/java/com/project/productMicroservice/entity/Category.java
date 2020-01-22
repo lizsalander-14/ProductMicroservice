@@ -11,7 +11,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Category {
 
     @Id
-    String categoryId;
-    String categoryName;
+    private String categoryId;
+    private String categoryName;
+    private String categoryImageUrl;
 
 }

@@ -30,9 +30,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Iterable<Product> getProductsByCategory() {
+    public List<Product> getProductsByCategory() {
         return productRepository.findByCategoryId();
     }
 
-
+    @Override
+    public void deleteProduct(String productId) {
+        productRepository.deleteById(productId);
+    }
 }

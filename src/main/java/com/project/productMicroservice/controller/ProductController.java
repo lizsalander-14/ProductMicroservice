@@ -11,12 +11,10 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 @RestController
+@CrossOrigin("*")
 @RequestMapping(value="/product")
 public class ProductController {
 
@@ -52,7 +50,7 @@ public class ProductController {
             headers.setContentType(MediaType.APPLICATION_JSON);
             HttpEntity<ProductDetailsDto> entityReq = new HttpEntity<>(productDetailsDto, headers);
             RestTemplate restTemplate = new RestTemplate();
-            String result = restTemplate.postForObject(uri,entityReq, String.class,productCreated);
+            String result = restTemplate.postForObject(uri,entityReq, String.class,productDetailsDto);
             System.out.println(result);
 
             responseDto.setData(productCreated);
@@ -66,7 +64,7 @@ public class ProductController {
         return responseDto;
     }
 
-    @GetMapping("/getProductDetailsOfMerchant")
+    @PostMapping("/getProductDetailsOfMerchant")
     public ResponseEntity<ProductDetailsOfMerchantDto> getProductDetailsOfMerchant(@RequestBody ProductDetailsDto productDetailsDto){
 
         ProductDetailsOfMerchantDto productDetailsOfMerchantDto=new ProductDetailsOfMerchantDto();
@@ -83,8 +81,8 @@ public class ProductController {
         return new ResponseEntity<ProductDetailsOfMerchantDto>(productDetailsOfMerchantDto,HttpStatus.CREATED);
     }
 
-    @GetMapping("/listOfProductsByMerchant")
-    public ResponseEntity<Iterable<MerchantProductListDto>> getListOfProductsSoldByMerchant(@RequestBody Iterable<MerchantProductListDto> productList){
+    @PostMapping("/listOfProductsByMerchant")
+    public ResponseEntity<List<MerchantProductListDto>> getListOfProductsSoldByMerchant(@RequestBody List<MerchantProductListDto> productList){
 
         for (MerchantProductListDto product:productList) {
             Product product1=productService.getProductDetailsById(product.getProductId());
@@ -92,7 +90,7 @@ public class ProductController {
             product.setImageUrl(product1.getImageUrl());
         }
 
-        return new ResponseEntity<Iterable<MerchantProductListDto>>(productList,HttpStatus.CREATED);
+        return new ResponseEntity<List<MerchantProductListDto>>(productList,HttpStatus.CREATED);
     }
     //merchant flow apis end
 
@@ -113,8 +111,8 @@ public class ProductController {
     }
 
     @GetMapping("/getCategoryProducts")
-    public ResponseDto<Iterable<Product>> getCategoryProducts(@RequestBody String categoryId){
-        ResponseDto<Iterable<Product>> responseDto=new ResponseDto<>();
+    public ResponseDto<List<Product>> getCategoryProducts(@RequestBody String categoryId){
+        ResponseDto<List<Product>> responseDto=new ResponseDto<>();
         try{
             responseDto.setData(productService.getProductsByCategory());
             responseDto.setSuccess(true);
@@ -126,8 +124,8 @@ public class ProductController {
         return responseDto;
     }
 
-    @GetMapping("/getProductDetails")
-    public ResponseDto<ProductDetailsPageDto> getProductDetails(@RequestBody String productId){
+    @GetMapping("/getProductDetails/{productId}")
+    public ResponseDto<ProductDetailsPageDto> getProductDetails(@PathVariable("productId") String productId){
         ProductDetailsPageDto productDetails=new ProductDetailsPageDto();
         productDetails.setProduct(productService.getProductDetailsById(productId));
         ResponseDto<ProductDetailsPageDto> responseDto=new ResponseDto<>();
@@ -137,7 +135,7 @@ public class ProductController {
             headers.setContentType(MediaType.APPLICATION_JSON);
             HttpEntity<String> entityReq = new HttpEntity<>(productId, headers);
             RestTemplate restTemplate = new RestTemplate();
-            Iterable<MerchantDto> result = restTemplate.postForObject(uri,entityReq, Iterable .class,productDetails);
+            List<MerchantDto> result = restTemplate.postForObject(uri,entityReq, List.class);
             productDetails.setMerchantList(result);
             responseDto.setData(productDetails);
             responseDto.setSuccess(true);
@@ -145,6 +143,21 @@ public class ProductController {
         catch (Exception e){
             responseDto.setSuccess(false);
             responseDto.setMessage("Couldn't get product details");
+        }
+        return responseDto;
+    }
+
+    @DeleteMapping("/deleteProduct/{productId}")
+    public ResponseDto<String> deleteProduct(@PathVariable("productId") String productId){
+        ResponseDto<String> responseDto=new ResponseDto<>();
+        try{
+            productService.deleteProduct(productId);
+            responseDto.setSuccess(true);
+            responseDto.setMessage("Product deleted");
+        }
+        catch (Exception e){
+            responseDto.setSuccess(false);
+            responseDto.setMessage("Product not deleted!");
         }
         return responseDto;
     }

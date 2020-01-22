@@ -15,13 +15,13 @@ import java.util.Map;
 public class Product {
 
     @Id
-    String productId;
-    String categoryId;
-    String productName;
-    String imageUrl;
-    Map<String,String> productAttributes;
-    double productPrice;
-    int productRating;
-    String productDescription;
+    private String productId;
+    private String categoryId;
+    private String productName;
+    private String imageUrl;
+    private Map<String,String> productAttributes;
+    private double productPrice;
+    private int productRating;
+    private String productDescription;
 
 }

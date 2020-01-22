@@ -7,5 +7,5 @@ public class MerchantDto {
 
     private String merchantId;
     private String merchantName;
-    private double price;
+    private double productPrice;
 }

@@ -9,5 +9,6 @@ public interface ProductService {
     Product addProduct(Product product);
     Product getProductDetailsById(String productId);
     List<Product> getPopularProducts();
-    Iterable<Product> getProductsByCategory();
+    List<Product> getProductsByCategory();
+    void deleteProduct(String productId);
 }
