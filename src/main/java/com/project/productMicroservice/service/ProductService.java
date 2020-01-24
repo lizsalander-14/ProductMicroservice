@@ -9,6 +9,6 @@ public interface ProductService {
     Product addProduct(Product product);
     Product getProductDetailsById(String productId);
     List<Product> getPopularProducts();
-    List<Product> getProductsByCategory();
+    List<Product> getProductsByCategory(String categoryId);
     void deleteProduct(String productId);
 }

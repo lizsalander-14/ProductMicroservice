@@ -4,6 +4,8 @@ import com.project.productMicroservice.entity.Product;
 import com.project.productMicroservice.repository.ProductRepository;
 import com.project.productMicroservice.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,17 +23,19 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product getProductDetailsById(String productId) {
-        return productRepository.findById(productId).get();
+        return productRepository.existsById(productId)?productRepository.findById(productId).get():null;
     }
 
     @Override
     public List<Product> getPopularProducts() {
-        return productRepository.getPopularProducts();
+//        return productRepository.findAll(PageRequest.of(1,5,Sort.by(Sort.Direction.DESC,"productRating"))).toList();
+//        return productRepository.getPopularProducts();
+       return productRepository.findAll(Sort.by(Sort.Direction.DESC, "productRating"));
     }
 
     @Override
-    public List<Product> getProductsByCategory() {
-        return productRepository.findByCategoryId();
+    public List<Product> getProductsByCategory(String categoryId) {
+        return productRepository.findByCategoryId(categoryId);
     }
 
     @Override

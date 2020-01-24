@@ -36,16 +36,17 @@ public class ProductController {
         productDetailsDto.setProductPrice(productDto.getProductPrice());
         Product product=new Product();
         BeanUtils.copyProperties(productDto,product, String.valueOf(productDetailsDto));
+        product.setProductRating(5);
         ResponseDto<Product> responseDto = new ResponseDto<>();
         try{
             Product productCreated=productService.addProduct(product);
-            productCreated.setProductRating(5);
+
 
             //Passing created object to search microservice
             producerService.produce(product);
 
             //Passing required details to merchant microservice
-            final String uri = "http://10.177.69.78:8080/productdetails/updateProduct";
+            final String uri = "http://10.177.69.78:8080/productdetails/add";
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             HttpEntity<ProductDetailsDto> entityReq = new HttpEntity<>(productDetailsDto, headers);
@@ -95,7 +96,7 @@ public class ProductController {
     //merchant flow apis end
 
     //Customer flow apis
-    @GetMapping("/getPopularProducts")
+    @GetMapping("/recommendations")
     public ResponseDto<List<Product>> getPopularProducts(){
         ResponseDto<List<Product>> responseDto=new ResponseDto<>();
         try{
@@ -110,16 +111,17 @@ public class ProductController {
         return responseDto;
     }
 
-    @GetMapping("/getCategoryProducts")
-    public ResponseDto<List<Product>> getCategoryProducts(@RequestBody String categoryId){
+    @GetMapping("/getCategoryProducts/{categoryId}")
+    public ResponseDto<List<Product>> getCategoryProducts(@PathVariable("categoryId") String categoryId){
         ResponseDto<List<Product>> responseDto=new ResponseDto<>();
         try{
-            responseDto.setData(productService.getProductsByCategory());
+            responseDto.setData(productService.getProductsByCategory(categoryId));
             responseDto.setSuccess(true);
         }
         catch (Exception e){
             responseDto.setSuccess(false);
             responseDto.setMessage("Couldn't get category products");
+            e.printStackTrace();
         }
         return responseDto;
     }
@@ -147,7 +149,21 @@ public class ProductController {
         return responseDto;
     }
 
-    @DeleteMapping("/deleteProduct/{productId}")
+    @PostMapping("/getCartPageDetails")
+    public List<CartPageDto> getCartPageDetails(@RequestBody List<CartPageDto> cartPageDto){
+        try {
+            for (CartPageDto cartDetails : cartPageDto) {
+                Product product = productService.getProductDetailsById(cartDetails.getProductId());
+                cartDetails.setProductName(product.getProductName());
+                cartDetails.setImageUrl(product.getImageUrl());
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return cartPageDto;
+    }
+
+    @PostMapping("/deleteProduct/{productId}")
     public ResponseDto<String> deleteProduct(@PathVariable("productId") String productId){
         ResponseDto<String> responseDto=new ResponseDto<>();
         try{
