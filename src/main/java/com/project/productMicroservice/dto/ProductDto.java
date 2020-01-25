@@ -15,7 +15,7 @@ public class ProductDto {
     private String imageUrl;
     private Map<String,String> productAttributes;
     private double productPrice;
-    private int productRating;
+    private float productRating;
     private String productDescription;
     private ProductDetailsDto productDetailsDto;
 }

@@ -30,8 +30,9 @@ public class ProductController {
 
     //Merchant flow apis
     @PostMapping(value = "/addProduct")
-    public ResponseDto<Product> addProduct(@RequestBody ProductDto productDto){
+    public ResponseDto<Product> addProduct(@RequestHeader("merchantId") String merchantId,@RequestBody ProductDto productDto){
         ProductDetailsDto productDetailsDto=productDto.getProductDetailsDto();
+        productDetailsDto.setMerchantId(merchantId);
         productDetailsDto.setProductId(productDto.getProductId());
         productDetailsDto.setProductPrice(productDto.getProductPrice());
         Product product=new Product();
@@ -46,7 +47,7 @@ public class ProductController {
             producerService.produce(product);
 
             //Passing required details to merchant microservice
-            final String uri = "http://10.177.69.78:8080/productdetails/add";
+            final String uri = "http://10.177.69.50:8762/spring-cloud-eureka-client-merchant/merchant/productdetails/add";
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             HttpEntity<ProductDetailsDto> entityReq = new HttpEntity<>(productDetailsDto, headers);
@@ -132,7 +133,7 @@ public class ProductController {
         productDetails.setProduct(productService.getProductDetailsById(productId));
         ResponseDto<ProductDetailsPageDto> responseDto=new ResponseDto<>();
         try{
-            final String uri = "http://10.177.69.78:8080/productdetails/merchantProductsList";
+            final String uri = "http://10.177.69.50:8762/spring-cloud-eureka-client-merchant/merchant/productdetails/merchantProductsList";
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             HttpEntity<String> entityReq = new HttpEntity<>(productId, headers);
@@ -161,6 +162,20 @@ public class ProductController {
             e.printStackTrace();
         }
         return cartPageDto;
+    }
+
+    @PostMapping("/getOrderPageDetails")
+    public List<OrderPageDto> getOrderPageDetails(@RequestBody List<OrderPageDto> orderPageDtos){
+        try {
+            for (OrderPageDto orderDetails:orderPageDtos) {
+                Product product = productService.getProductDetailsById(orderDetails.getProductId());
+                orderDetails.setProductName(product.getProductName());
+                orderDetails.setImageUrl(product.getImageUrl());
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return orderPageDtos;
     }
 
     @PostMapping("/deleteProduct/{productId}")

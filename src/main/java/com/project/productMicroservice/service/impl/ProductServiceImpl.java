@@ -30,7 +30,7 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> getPopularProducts() {
 //        return productRepository.findAll(PageRequest.of(1,5,Sort.by(Sort.Direction.DESC,"productRating"))).toList();
 //        return productRepository.getPopularProducts();
-       return productRepository.findAll(Sort.by(Sort.Direction.DESC, "productRating"));
+       return productRepository.findAll(Sort.by(Sort.Direction.DESC, "productRating")).subList(0,4);
     }
 
     @Override

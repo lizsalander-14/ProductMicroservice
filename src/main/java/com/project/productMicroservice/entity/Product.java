@@ -21,7 +21,7 @@ public class Product {
     private String imageUrl;
     private Map<String,String> productAttributes;
     private double productPrice;
-    private int productRating;
+    private float productRating;
     private String productDescription;
 
 }
