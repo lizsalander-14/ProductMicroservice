@@ -47,7 +47,7 @@ public class ProductController {
             producerService.produce(product);
 
             //Passing required details to merchant microservice
-            final String uri = "http://10.177.69.50:8762/spring-cloud-eureka-client-merchant/merchant/productdetails/add";
+            final String uri = "http://10.177.68.40:8762/spring-cloud-eureka-client-merchant/merchant/productdetails/add";
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             HttpEntity<ProductDetailsDto> entityReq = new HttpEntity<>(productDetailsDto, headers);
@@ -133,7 +133,7 @@ public class ProductController {
         productDetails.setProduct(productService.getProductDetailsById(productId));
         ResponseDto<ProductDetailsPageDto> responseDto=new ResponseDto<>();
         try{
-            final String uri = "http://10.177.69.50:8762/spring-cloud-eureka-client-merchant/merchant/productdetails/merchantProductsList";
+            final String uri = "http://10.177.68.40:8762/spring-cloud-eureka-client-merchant/merchant/productdetails/merchantProductsList";
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             HttpEntity<String> entityReq = new HttpEntity<>(productId, headers);
